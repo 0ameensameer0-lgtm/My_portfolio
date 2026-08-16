@@ -89,7 +89,8 @@ function ResponsiveCamera() {
   const { camera, size } = useThree();
 
   useEffect(() => {
-    camera.position.z = size.width < 640 ? 7.8 : 6.5;
+    const mobileWidth = Math.min(Math.max(size.width, 360), 640);
+    camera.position.z = size.width < 640 ? 9.8 - ((mobileWidth - 360) / 280) * 2.9 : 6.5;
     camera.updateProjectionMatrix();
   }, [camera, size.width]);
 
@@ -97,7 +98,7 @@ function ResponsiveCamera() {
 }
 
 function PortraitNode({ isLight }: { isLight: boolean }) {
-  const texture = useTexture("/ameen-portrait-new.png");
+  const texture = useTexture("/ameen-portrait-new.jpeg");
   const portraitGroup = useRef<THREE.Group>(null);
 
   useEffect(() => {

@@ -32,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${inter.variable} ${mono.variable} ${orbitron.variable} bg-[#020817] text-white antialiased`}
       >
         <SiteProvider>{children}</SiteProvider>

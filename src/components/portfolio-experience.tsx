@@ -25,6 +25,8 @@ import {
   Linkedin,
   Mail,
   MessageCircle,
+  Menu,
+  MoreHorizontal,
   MoonStar,
   Phone,
   Play,
@@ -62,6 +64,8 @@ export function PortfolioExperience() {
   const [loadingDone, setLoadingDone] = useState(false);
   const [loadingValue, setLoadingValue] = useState(0);
   const [activeNav, setActiveNav] = useState<(typeof navTargets)[number]>("hero");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const [typedIndex, setTypedIndex] = useState(0);
   const [typedText, setTypedText] = useState("");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -183,16 +187,20 @@ export function PortfolioExperience() {
         {
           y: 40,
           opacity: 0,
+          scale: 0.96,
+          filter: "blur(8px)",
         },
         {
           y: 0,
           opacity: 1,
-          stagger: 0.08,
-          duration: 1,
+          scale: 1,
+          filter: "blur(0px)",
+          stagger: 0.14,
+          duration: 0.72,
           ease: "power3.out",
           scrollTrigger: {
             trigger: scene,
-            start: "top 75%",
+            start: "top 80%",
           },
         },
       );
@@ -346,8 +354,30 @@ export function PortfolioExperience() {
       </div>
 
       <header className={cn("fixed inset-x-0 top-0 z-[95] px-4 md:px-8", isArabic ? "py-4" : "py-2.5")}>
+        <div dir="ltr" className="portfolio-mobile-header mx-auto flex w-full max-w-md items-center justify-between rounded-[1.7rem] px-3 py-2 shadow-[0_18px_50px_rgba(0,0,0,0.38)] md:hidden">
+          <button
+            className="portfolio-mobile-menu-trigger flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-300/10 text-emerald-200 transition active:scale-95"
+            onClick={() => {
+              setMobileMenuOpen((open) => !open);
+              setMobileMoreOpen(false);
+              playSound("click");
+            }}
+            aria-label={isArabic ? "فتح القائمة" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-6 w-6" />}
+          </button>
+          <button dir={isArabic ? "rtl" : "ltr"} className="mr-3 min-w-0 flex-1 text-right" onClick={() => scrollToSection("hero")}>
+            <strong className="block truncate text-sm">{profile.name[language]}</strong>
+            <span className="text-xs text-muted">{profile.role[language]}</span>
+          </button>
+          <button className="portfolio-mobile-logo flex h-11 w-11 items-center justify-center rounded-2xl p-1" onClick={() => scrollToSection("hero")}>
+            <Image src="/brand-logo-2026.png" alt="Ameen Logo" width={34} height={24} className="h-auto w-full max-w-[2.1rem] object-contain" priority />
+          </button>
+        </div>
+
           <div className={cn(
-            "glass-panel-strong mx-auto flex w-full max-w-7xl items-center justify-between rounded-full shadow-[0_18px_50px_rgba(0,0,0,0.25)]",
+            "glass-panel-strong mx-auto hidden w-full max-w-7xl items-center justify-between rounded-full shadow-[0_18px_50px_rgba(0,0,0,0.25)] md:flex",
             isArabic ? "gap-4 px-4 py-3 md:px-6" : "gap-3 px-3 py-2 md:px-4",
           )}>
           <button
@@ -421,6 +451,27 @@ export function PortfolioExperience() {
           </div>
         </div>
       </header>
+
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            <motion.button className="fixed inset-0 z-[96] bg-black/45 md:hidden" aria-label={isArabic ? "إغلاق القائمة" : "Close menu"} onClick={() => setMobileMenuOpen(false)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
+            <motion.nav className="glass-panel-strong fixed left-4 top-[5.9rem] z-[97] w-[min(18rem,calc(100vw-2rem))] overflow-hidden rounded-[1.6rem] p-2 shadow-[0_24px_60px_rgba(0,0,0,0.45)] md:hidden" aria-label={isArabic ? "التنقل على الهاتف" : "Mobile navigation"} initial={{ opacity: 0, y: -12, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -12, scale: 0.97 }} transition={{ duration: 0.18 }}>
+              {navTargets.map((sectionId, index) => {
+                const Icon = navIcons[index];
+                return <button key={sectionId} onClick={() => { scrollToSection(sectionId); setMobileMenuOpen(false); }} className={cn("portfolio-drawer-item flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm", activeNav === sectionId && "is-active")} aria-current={activeNav === sectionId ? "page" : undefined}><Icon className="h-5 w-5 shrink-0" strokeWidth={1.9} /><span>{navLabels[index]}</span></button>;
+              })}
+              <div className="mt-1 border-t border-white/10 pt-1">
+                <button className={cn("portfolio-drawer-item flex w-full items-center justify-between rounded-xl px-3 py-3 text-sm", mobileMoreOpen && "is-active")} onClick={() => setMobileMoreOpen((open) => !open)}>
+                  <span className="flex items-center gap-3"><MoreHorizontal className="h-5 w-5" />{isArabic ? "المزيد" : "More"}</span>
+                  <ChevronDown className={cn("h-4 w-4 transition-transform", mobileMoreOpen && "rotate-180")} />
+                </button>
+                {mobileMoreOpen && <div className="mt-1 flex items-center justify-between gap-2 rounded-xl bg-white/5 p-2"><ControlPill icon={<Languages className="h-4 w-4" />} label={copy.language} value={language === "ar" ? "AR" : "EN"} compact onClick={() => { setLanguage(language === "ar" ? "en" : "ar"); playSound("click"); }} /><SwitchPill label={copy.theme} checked={theme === "light"} compact onCheckedChange={(checked) => { setTheme(checked ? "light" : "dark"); playSound("click"); }} /></div>}
+              </div>
+            </motion.nav>
+          </>
+        )}
+      </AnimatePresence>
 
       <aside className="fixed right-3 top-1/2 z-[92] hidden -translate-y-1/2 flex-col gap-3 xl:flex">
         {navTargets.map((target) => (
@@ -533,13 +584,13 @@ export function PortfolioExperience() {
           <SectionShell title={copy.aboutTitle} kicker="PROFILE OVERVIEW" description={copy.aboutBody} language={language}>
             <div className="grid gap-6 lg:grid-cols-[1fr_1.15fr]">
               <motion.div data-reveal className="glass-panel section-edge rounded-[2rem] p-6 shadow-[0_18px_60px_rgba(0,0,0,0.25)]">
-                <div className="relative mx-auto mb-6 aspect-[0.887] w-full max-w-[25rem] overflow-hidden rounded-[1.5rem] border border-white/8 bg-gradient-to-br from-cyan-300/10 via-blue-500/10 to-violet-500/12 p-4">
+                <div className="relative mx-auto mb-6 aspect-[0.887] w-full max-w-[25rem] overflow-hidden rounded-[1.5rem] border border-white/8 bg-gradient-to-br from-emerald-300/10 via-teal-500/10 to-sky-500/12 p-4">
                   <Image
-                    src="/ameen-portrait-new.png"
+                    src="/ameen-portrait-new.jpeg"
                     alt={profile.name.en}
                     width={900}
                     height={900}
-                    className="h-full w-full origin-bottom scale-[1.15] rounded-[1.2rem] object-contain object-bottom"
+                    className="h-full w-full origin-bottom scale-[1.12] rounded-[1.2rem] object-contain object-bottom"
                   />
                 </div>
                 <p className="text-base leading-8 text-white/75">{copy.aboutBody2}</p>
@@ -552,15 +603,20 @@ export function PortfolioExperience() {
                   </div>
                   <div className="space-y-4">
                     {milestones.map((item) => (
-                      <div key={item.year} className="relative rounded-[1.5rem] border border-white/8 bg-white/[0.03] p-5">
+                      <motion.div
+                        key={item.year}
+                        className="milestone-card relative overflow-hidden rounded-[1.5rem] border border-white/8 bg-white/[0.03] p-5"
+                        whileHover={{ y: -4, scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                      >
                         <div className="mb-2 flex items-center justify-between gap-4">
-                          <span className="font-[var(--font-display)] text-2xl text-cyan-300">{item.year}</span>
+                          <span className="milestone-year font-[var(--font-display)] text-2xl text-cyan-300">{item.year}</span>
                           <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
                             {item.type[language]}
                           </span>
                         </div>
                         <p className="text-sm leading-7 text-muted">{item.summary[language]}</p>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </motion.div>

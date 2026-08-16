@@ -225,6 +225,125 @@ body.light .glass-panel-strong {
   background: var(--cyan);
 }
 
+.portfolio-mobile-nav-item {
+  color: color-mix(in srgb, var(--muted) 90%, white);
+  transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.portfolio-drawer-item {
+  color: rgba(226, 237, 247, 0.78);
+  transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.portfolio-mobile-header {
+  background: rgba(2, 8, 20, 0.96);
+  border: 1px solid rgba(110, 231, 183, 0.14);
+  backdrop-filter: blur(22px);
+}
+
+.milestone-card {
+  transition: border-color 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+}
+
+.milestone-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(110deg, transparent 24%, rgba(94, 234, 212, 0.08) 50%, transparent 76%);
+  transform: translateX(-110%);
+  transition: opacity 220ms ease, transform 520ms ease;
+}
+
+.milestone-card:hover {
+  border-color: rgba(94, 234, 212, 0.32);
+  background-color: rgba(45, 212, 191, 0.05);
+  box-shadow: 0 16px 34px rgba(2, 8, 20, 0.24);
+}
+
+.milestone-card:hover::after {
+  opacity: 1;
+  transform: translateX(110%);
+}
+
+.milestone-card:hover .milestone-year {
+  text-shadow: 0 0 16px rgba(94, 234, 212, 0.48);
+}
+
+.portfolio-mobile-logo {
+  background: radial-gradient(circle at 35% 30%, rgba(45, 212, 191, 0.16), rgba(2, 8, 20, 0.92));
+  border: 1px solid rgba(125, 211, 252, 0.34);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.34);
+}
+
+.light .portfolio-mobile-header,
+body.light .portfolio-mobile-header {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(15, 118, 110, 0.16);
+}
+
+.light .portfolio-mobile-logo,
+body.light .portfolio-mobile-logo {
+  background: rgba(240, 253, 250, 0.92);
+  border-color: rgba(15, 118, 110, 0.28);
+}
+
+.light .section-heading-block > span,
+body.light .section-heading-block > span {
+  color: #0f5f59 !important;
+  background: rgba(204, 251, 241, 0.72);
+  border-color: rgba(15, 118, 110, 0.22);
+}
+
+.light .portfolio-mobile-menu-trigger,
+body.light .portfolio-mobile-menu-trigger {
+  color: #0f766e;
+  background: #d8f5ed;
+  box-shadow: inset 0 0 0 1px rgba(15, 118, 110, 0.12);
+}
+
+.portfolio-drawer-item:hover,
+.portfolio-drawer-item.is-active {
+  color: var(--cyan);
+  background: color-mix(in srgb, var(--cyan) 10%, transparent);
+}
+
+.portfolio-drawer-item.is-active {
+  box-shadow: inset 3px 0 0 var(--cyan);
+}
+
+.light .portfolio-drawer-item,
+body.light .portfolio-drawer-item {
+  color: #526579;
+}
+
+.light .portfolio-drawer-item:hover,
+.light .portfolio-drawer-item.is-active,
+body.light .portfolio-drawer-item:hover,
+body.light .portfolio-drawer-item.is-active {
+  color: #0f766e;
+}
+
+.portfolio-mobile-nav-item.is-active {
+  color: var(--cyan);
+  background: color-mix(in srgb, var(--cyan) 12%, transparent);
+}
+
+.portfolio-mobile-nav-item:active {
+  transform: scale(0.96);
+}
+
+.light .portfolio-mobile-nav-item,
+body.light .portfolio-mobile-nav-item {
+  color: #526579;
+}
+
+.light .portfolio-mobile-nav-item.is-active,
+body.light .portfolio-mobile-nav-item.is-active {
+  color: #0f766e;
+}
+
 .section-description-card {
   position: relative;
   display: flex;

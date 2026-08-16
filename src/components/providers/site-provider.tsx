@@ -27,26 +27,14 @@ type SiteContextValue = {
 const SiteContext = createContext<SiteContextValue | null>(null);
 
 export function SiteProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>("en");
-  const [theme, setTheme] = useState<Theme>("light");
+  const [language, setLanguage] = useState<Language>("ar");
+  const [theme, setTheme] = useState<Theme>("dark");
   const [soundEnabled, setSoundEnabled] = useState(false);
   const audioRef = useRef<AudioContext | null>(null);
   const didHydrateRef = useRef(false);
 
   useEffect(() => {
-    const savedLanguage = window.localStorage.getItem("portfolio-language");
-    const savedTheme = window.localStorage.getItem("portfolio-theme");
     const savedSound = window.localStorage.getItem("portfolio-sound");
-
-    if (savedLanguage === "ar" || savedLanguage === "en") {
-      setLanguage(savedLanguage);
-    } else {
-      setLanguage("ar");
-    }
-
-    if (savedTheme === "light" || savedTheme === "dark") {
-      setTheme(savedTheme);
-    }
 
     if (savedSound === "true") {
       setSoundEnabled(true);
